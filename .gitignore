@@ -1,0 +1,2 @@
+chicago-buildings/*
+!chicago-buildings/import_geojson.py
