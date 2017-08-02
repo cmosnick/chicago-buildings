@@ -8,7 +8,7 @@ require([
 	"esri/Color",
 	"esri/layers/LabelClass",
 	"esri/InfoTemplate",
-	// "modules/BuildingInfoWindow",
+	"esri/dijit/Legend",
 
 	"dojo/on",
 	"dojo/dom-construct",
@@ -23,7 +23,7 @@ function(
 	Color,
 	LabelClass,
 	InfoTemplate,
-	// BuildingInfoWindow,
+	Legend,
 	
 	on,
 	domConstruct
@@ -49,9 +49,9 @@ function(
 		// Set renderer for buildings
 		var renderer = new SimpleRenderer(new SimpleFillSymbol().setOutline(new SimpleLineSymbol().setWidth(0.1).setColor(new Color([255, 255, 255]))));
 		renderer.setColorInfo({
-			field: "Shape_Area",
-			minDataValue: 0,
-			maxDataValue: 500000,
+			field: "Area_Sq_Ft",
+			minDataValue: 1,
+			maxDataValue: 4371813,
 			colors: [
 				new Color([255, 0, 0]),
 				new Color([255, 255, 0])
@@ -62,8 +62,6 @@ function(
 		on(buildings, "load", function(e){
 			map.setExtent(buildings.fullExtent);
 		});
-
-
 		createPopupTemplate(buildings);
 
 
@@ -87,14 +85,31 @@ function(
 			})
 		})]);
 		map.addLayer(communityAreas);
+
+		var legend = new Legend({
+			map: map,
+			layerInfos: [{
+				title: "Building size (square feet)",
+				layer: buildings
+			}]
+		}, "legend");
+		legend.startup();
 		return (buildings, communityAreas);
 	}
 
 	function createPopupTemplate(buildings){
-		// var infoWindow = new BuildingInfoWindow({
-
-		// });
-		var template = new InfoTemplate("${F_ADD1} ${PRE_DIR1} ${ST_NAME1} ${ST_TYPE1}", "${*}");
+		var template = new InfoTemplate("${F_ADD1} ${PRE_DIR1} ${ST_NAME1} ${ST_TYPE1}", 
+			"Building status: ${BLDG_STATU}<br>\
+			Name: ${BLDG_NAME1}<br>\
+			Alternate Name: ${BLDG_NAME2}<br>\
+			Comments: ${COMMENTS}<br>\
+			Stories: ${STORIES}<br>\
+			Number of Units: ${NO_OF_UNIT}<br>\
+			Year built: ${YEAR_BUILT}<br>\
+			Square feet: ${Area_Sq_Ft}<br>\
+			Condition: ${BLDG_CONDI}<br>\
+			Condition recorded: ${CONDITION_}\
+		");
 		buildings.setInfoTemplate(template);
 	}
 });
