@@ -1,7 +1,7 @@
 # chicago-buildings
 
 
-
+[view webmap here](https://cmosnick.github.io/chicago-buildings/)
 
 ### Ideas:
 
